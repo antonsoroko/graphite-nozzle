@@ -4,6 +4,16 @@
 	"GodepVersion": "v74",
 	"Deps": [
 		{
+			"ImportPath": "github.com/Sirupsen/logrus",
+			"Comment": "v0.10.0-46-g380f64d",
+			"Rev": "380f64d344b252a007a59baa61f31820f59cba89"
+		},
+		{
+			"ImportPath": "github.com/Sirupsen/logrus/hooks/syslog",
+			"Comment": "v0.10.0-46-g380f64d",
+			"Rev": "380f64d344b252a007a59baa61f31820f59cba89"
+		},
+		{
 			"ImportPath": "github.com/alecthomas/template",
 			"Rev": "b867cc6ab45cece8143cfcc6fc9c77cf3f2c23c0"
 		},
@@ -16,8 +26,27 @@
 			"Rev": "6b4e7dc5e3143b85ea77909c72caf89416fc2915"
 		},
 		{
-			"ImportPath": "github.com/cloudfoundry-incubator/uaago",
-			"Rev": "5253fdf54e4a464366e5ffa8e5f456f5f1e50a2f"
+			"ImportPath": "github.com/boltdb/bolt",
+			"Comment": "v1.3.0-29-g4b1ebc1",
+			"Rev": "4b1ebc1869ad66568b313d0dc410e2be72670dda"
+		},
+		{
+			"ImportPath": "github.com/cloudfoundry-community/firehose-to-syslog/caching",
+			"Comment": "1.8.1-16-g1ad3542",
+			"Rev": "1ad354225cd7cc0d6b5b07335308fcf3f8869c94"
+		},
+		{
+			"ImportPath": "github.com/cloudfoundry-community/firehose-to-syslog/logging",
+			"Comment": "1.8.1-16-g1ad3542",
+			"Rev": "1ad354225cd7cc0d6b5b07335308fcf3f8869c94"
+		},
+		{
+			"ImportPath": "github.com/cloudfoundry-community/go-cfclient",
+			"Rev": "c783aa0efe78706e9d98ffc4a84f0d42cd322ac8"
+		},
+		{
+			"ImportPath": "github.com/cloudfoundry-community/gogobosh",
+			"Rev": "e7a18d7503b034b169f6e95bd303799718996ae3"
 		},
 		{
 			"ImportPath": "github.com/cloudfoundry/noaa",
@@ -60,12 +89,44 @@
 			"Rev": "a69d25be2fe2923a97c2af6849b2f52426f68fc0"
 		},
 		{
+			"ImportPath": "github.com/mailru/easyjson",
+			"Rev": "a620b7294ccc645fb77e9b99e1cc9de6d2b610fb"
+		},
+		{
+			"ImportPath": "github.com/mailru/easyjson/buffer",
+			"Rev": "a620b7294ccc645fb77e9b99e1cc9de6d2b610fb"
+		},
+		{
+			"ImportPath": "github.com/mailru/easyjson/jlexer",
+			"Rev": "a620b7294ccc645fb77e9b99e1cc9de6d2b610fb"
+		},
+		{
+			"ImportPath": "github.com/mailru/easyjson/jwriter",
+			"Rev": "a620b7294ccc645fb77e9b99e1cc9de6d2b610fb"
+		},
+		{
 			"ImportPath": "github.com/quipo/statsd",
 			"Rev": "1090ab4693b587d42fbf75c2cc64a031a9f22a4b"
 		},
 		{
 			"ImportPath": "github.com/quipo/statsd/event",
 			"Rev": "1090ab4693b587d42fbf75c2cc64a031a9f22a4b"
+		},
+		{
+			"ImportPath": "golang.org/x/net/context",
+			"Rev": "541150ac4f433e755f5663eba5d888c2fa347343"
+		},
+		{
+			"ImportPath": "golang.org/x/oauth2",
+			"Rev": "25b4fb1468cb89700c7c060cb99f30581a61f5e3"
+		},
+		{
+			"ImportPath": "golang.org/x/oauth2/internal",
+			"Rev": "25b4fb1468cb89700c7c060cb99f30581a61f5e3"
+		},
+		{
+			"ImportPath": "golang.org/x/sys/unix",
+			"Rev": "c200b10b5d5e122be351b67af224adc6128af5bf"
 		},
 		{
 			"ImportPath": "gopkg.in/alecthomas/kingpin.v2",
