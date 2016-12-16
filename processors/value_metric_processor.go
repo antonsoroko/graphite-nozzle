@@ -23,6 +23,9 @@ func (p *ValueMetricProcessor) Process(e *events.Envelope) ([]metrics.Metric, er
 func (p *ValueMetricProcessor) ProcessValueMetric(event *events.ValueMetric, origin string) *metrics.FGaugeMetric {
 	statPrefix := "ops." + origin + "."
 	valueMetricName := event.GetName()
+	if origin == "gorouter" && valueMetricName == "latency" {
+		valueMetricName += ".all"
+	}
 	stat := statPrefix + valueMetricName
 	metric := metrics.NewFGaugeMetric(stat, event.GetValue())
 
