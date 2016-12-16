@@ -21,7 +21,14 @@ func (p *CounterProcessor) Process(e *events.Envelope) ([]metrics.Metric, error)
 }
 
 func (p *CounterProcessor) ProcessCounter(event *events.CounterEvent) *metrics.CounterMetric {
-	stat := "ops." + event.GetName()
+	counterMetricName := event.GetName()
+	switch counterMetricName {
+	case "responses":
+		counterMetricName += ".all"
+	case "registry_message.":
+		counterMetricName += "unknown"
+	}
+	stat := "ops." + counterMetricName
 	metric := metrics.NewCounterMetric(stat, int64(event.GetDelta()))
 
 	return metric
