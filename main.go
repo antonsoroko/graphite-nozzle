@@ -82,7 +82,7 @@ func main() {
 	cachingClient.PerformBoshPoolingCaching(*boshTickerTime)
 
 	httpStartStopProcessor := processors.NewHttpStartStopProcessor(cachingClient)
-	valueMetricProcessor := processors.NewValueMetricProcessor()
+	valueMetricProcessor := processors.NewValueMetricProcessor(cachingClient)
 	counterProcessor := processors.NewCounterProcessor()
 	containerMetricProcessor := processors.NewContainerMetricProcessor(cachingClient)
 
@@ -124,15 +124,17 @@ func main() {
 		}
 
 		for _, metric := range processedMetrics {
-			var prefix string
-			var index int
-			if *prefixJob {
-				index = cachingClient.GetJobInfoCache(msg.GetIndex()).Index
-				prefix = msg.GetJob() + "." + fmt.Sprintf("%d", index)
-			}
-			metric.Send(sender, prefix)
-			if *debug {
-				fmt.Println(prefix, metric)
+			if metric != nil {
+				var prefix string
+				var index int
+				if *prefixJob {
+					index = cachingClient.GetJobInfoCache(msg.GetIndex()).Index
+					prefix = msg.GetJob() + "." + fmt.Sprintf("%d", index)
+				}
+				metric.Send(sender, prefix)
+				if *debug {
+					fmt.Println(prefix, metric)
+				}
 			}
 		}
 
