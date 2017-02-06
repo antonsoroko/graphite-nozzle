@@ -7,6 +7,7 @@ import (
 	"crypto/tls"
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/cloudfoundry-community/go-cfclient"
 	"github.com/cloudfoundry-community/gogobosh"
@@ -31,7 +32,7 @@ var (
 	password          = kingpin.Flag("password", "Firehose password.").Default("admin").OverrideDefaultFromEnvar("FIREHOSE_PASSWORD").String()
 	skipSSLValidation = kingpin.Flag("skip-ssl-validation", "Please don't").Default("false").OverrideDefaultFromEnvar("SKIP_SSL_VALIDATION").Bool()
 	debug             = kingpin.Flag("debug", "Enable debug mode. This disables forwarding to statsd and prints to stdout").Default("false").OverrideDefaultFromEnvar("DEBUG").Bool()
-	boltDatabasePath  = kingpin.Flag("boltdb-path", "Bolt Database path ").Default("my.db").OverrideDefaultFromEnvar("BOLTDB_PATH").String()
+	boltDatabasePath  = kingpin.Flag("boltdb-path", "Bolt Database path").Default("my.db").OverrideDefaultFromEnvar("BOLTDB_PATH").String()
 	boshUsername      = kingpin.Flag("bosh-username", "BOSH username.").Default("admin").OverrideDefaultFromEnvar("BOSH_USERNAME").String()
 	boshPassword      = kingpin.Flag("bosh-password", "BOSH password.").Default("admin").OverrideDefaultFromEnvar("BOSH_PASSWORD").String()
 	ccTickerTime      = kingpin.Flag("cc-pull-time", "CloudController Polling time in sec").Default("60s").OverrideDefaultFromEnvar("CF_PULL_TIME").Duration()
@@ -128,7 +129,9 @@ func main() {
 			var index int
 			if *prefixJob {
 				index = cachingClient.GetJobInfoCache(msg.GetIndex()).Index
-				prefix = msg.GetJob() + "." + fmt.Sprintf("%d", index)
+				jobName := msg.GetJob()
+				jobName = strings.Replace(jobName, ".", "_", -1)
+				prefix = jobName + "." + fmt.Sprintf("%d", index)
 			}
 			metric.Send(sender, prefix)
 			if *debug {

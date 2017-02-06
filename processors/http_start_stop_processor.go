@@ -107,6 +107,7 @@ func (p *HttpStartStopProcessor) ProcessHttpStartStopResponseTimeForApp(event *e
 	appID := FormatUUID(event.GetApplicationId())
 	appInfo := p.CachingClient.GetAppInfoCache(appID)
 	appName := appInfo.Name
+	appName = strings.Replace(appName, ".", "_", -1)
 	spaceName := appInfo.SpaceName
 	orgName := appInfo.OrgName
 	// TODO: apparently GetInstanceIndex always is nil, so we need to find a way to convert
@@ -133,6 +134,7 @@ func (p *HttpStartStopProcessor) ProcessHttpStartStopStatusCodeCountForApp(event
 	appID := FormatUUID(event.GetApplicationId())
 	appInfo := p.CachingClient.GetAppInfoCache(appID)
 	appName := appInfo.Name
+	appName = strings.Replace(appName, ".", "_", -1)
 	spaceName := appInfo.SpaceName
 	orgName := appInfo.OrgName
 	// TODO: apparently GetInstanceIndex always is nil, so we need to find a way to convert
@@ -175,6 +177,7 @@ func (p *HttpStartStopProcessor) ProcessHttpStartStopHttpErrorCountForApp(event 
 	appID := FormatUUID(event.GetApplicationId())
 	appInfo := p.CachingClient.GetAppInfoCache(appID)
 	appName := appInfo.Name
+	appName = strings.Replace(appName, ".", "_", -1)
 	spaceName := appInfo.SpaceName
 	orgName := appInfo.OrgName
 	// TODO: apparently GetInstanceIndex always is nil, so we need to find a way to convert
@@ -200,6 +203,7 @@ func (p *HttpStartStopProcessor) ProcessHttpStartStopHttpRequestCountForApp(even
 	appID := FormatUUID(event.GetApplicationId())
 	appInfo := p.CachingClient.GetAppInfoCache(appID)
 	appName := appInfo.Name
+	appName = strings.Replace(appName, ".", "_", -1)
 	spaceName := appInfo.SpaceName
 	orgName := appInfo.OrgName
 	// TODO: apparently GetInstanceIndex always is nil, so we need to find a way to convert

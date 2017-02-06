@@ -5,6 +5,7 @@ import (
 	"github.com/cloudfoundry/sonde-go/events"
 	"github.com/pivotal-cf/graphite-nozzle/metrics"
 	"strconv"
+	"strings"
 )
 
 type ContainerMetricProcessor struct {
@@ -32,6 +33,7 @@ func (p *ContainerMetricProcessor) ProcessContainerMetricCPU(e *events.Container
 	appID := e.GetApplicationId()
 	appInfo := p.CachingClient.GetAppInfoCache(appID)
 	appName := appInfo.Name
+	appName = strings.Replace(appName, ".", "_", -1)
 	spaceName := appInfo.SpaceName
 	orgName := appInfo.OrgName
 	instanceIndex := strconv.Itoa(int(e.GetInstanceIndex()))
@@ -46,6 +48,7 @@ func (p *ContainerMetricProcessor) ProcessContainerMetricMemory(e *events.Contai
 	appID := e.GetApplicationId()
 	appInfo := p.CachingClient.GetAppInfoCache(appID)
 	appName := appInfo.Name
+	appName = strings.Replace(appName, ".", "_", -1)
 	spaceName := appInfo.SpaceName
 	orgName := appInfo.OrgName
 	instanceIndex := strconv.Itoa(int(e.GetInstanceIndex()))
@@ -60,6 +63,7 @@ func (p *ContainerMetricProcessor) ProcessContainerMetricMemoryQuota(e *events.C
 	appID := e.GetApplicationId()
 	appInfo := p.CachingClient.GetAppInfoCache(appID)
 	appName := appInfo.Name
+	appName = strings.Replace(appName, ".", "_", -1)
 	spaceName := appInfo.SpaceName
 	orgName := appInfo.OrgName
 	instanceIndex := strconv.Itoa(int(e.GetInstanceIndex()))
@@ -74,6 +78,7 @@ func (p *ContainerMetricProcessor) ProcessContainerMetricDisk(e *events.Containe
 	appID := e.GetApplicationId()
 	appInfo := p.CachingClient.GetAppInfoCache(appID)
 	appName := appInfo.Name
+	appName = strings.Replace(appName, ".", "_", -1)
 	spaceName := appInfo.SpaceName
 	orgName := appInfo.OrgName
 	instanceIndex := strconv.Itoa(int(e.GetInstanceIndex()))
@@ -88,6 +93,7 @@ func (p *ContainerMetricProcessor) ProcessContainerMetricDiskQuota(e *events.Con
 	appID := e.GetApplicationId()
 	appInfo := p.CachingClient.GetAppInfoCache(appID)
 	appName := appInfo.Name
+	appName = strings.Replace(appName, ".", "_", -1)
 	spaceName := appInfo.SpaceName
 	orgName := appInfo.OrgName
 	instanceIndex := strconv.Itoa(int(e.GetInstanceIndex()))
