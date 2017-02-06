@@ -9,14 +9,16 @@ import (
 	"github.com/pivotal-cf/graphite-nozzle/metrics"
 	"strconv"
 	"strings"
+	"regexp"
 )
 
 type HttpStartStopProcessor struct {
 	CachingClient caching.Caching
+	DomainsRegexp []*regexp.Regexp
 }
 
-func NewHttpStartStopProcessor(caching caching.Caching) *HttpStartStopProcessor {
-	return &HttpStartStopProcessor{CachingClient: caching}
+func NewHttpStartStopProcessor(caching caching.Caching, domainsRegexp []*regexp.Regexp) *HttpStartStopProcessor {
+	return &HttpStartStopProcessor{CachingClient: caching, DomainsRegexp: domainsRegexp}
 }
 
 func (p *HttpStartStopProcessor) Process(e *events.Envelope) (processedMetrics []metrics.Metric, err error) {
@@ -36,6 +38,20 @@ func (p *HttpStartStopProcessor) Process(e *events.Envelope) (processedMetrics [
 	}()
 
 	httpStartStopEvent := e.GetHttpStartStop()
+
+	if p.DomainsRegexp != nil {
+		hostname := p.parseEventUri(httpStartStopEvent.GetUri())
+		var passed bool = false
+		for _, domainRegexp := range p.DomainsRegexp {
+			if domainRegexp.MatchString(hostname) {
+				passed = true
+				break
+			}
+		}
+		if !passed {
+			panic(errors.New("Metric from bad domain: " + hostname))
+		}
+	}
 
 	if httpStartStopEvent.GetApplicationId() != nil {
 		processedMetrics = make([]metrics.Metric, 8)

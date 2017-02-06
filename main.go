@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"regexp"
 
 	"github.com/cloudfoundry-community/go-cfclient"
 	"github.com/cloudfoundry-community/gogobosh"
@@ -37,6 +38,7 @@ var (
 	boshPassword      = kingpin.Flag("bosh-password", "BOSH password.").Default("admin").OverrideDefaultFromEnvar("BOSH_PASSWORD").String()
 	ccTickerTime      = kingpin.Flag("cc-pull-time", "CloudController Polling time in sec").Default("60s").OverrideDefaultFromEnvar("CF_PULL_TIME").Duration()
 	boshTickerTime    = kingpin.Flag("bosh-pull-time", "BOSH Polling time in sec").Default("600s").OverrideDefaultFromEnvar("BOSH_PULL_TIME").Duration()
+	appsDomains       = kingpin.Flag("apps-domains", "List of CF apps domains, to filter out HttpStartStop metrics").Strings()
 )
 
 type CfClientTokenRefresh struct {
@@ -49,6 +51,17 @@ func (ct *CfClientTokenRefresh) RefreshAuthToken() (string, error) {
 
 func main() {
 	kingpin.Parse()
+
+	var domainsRegexp []*regexp.Regexp
+	for _, appsDomain := range *appsDomains {
+		domainRegexpRaw := fmt.Sprintf(`^.*%s$`, strings.Replace(appsDomain, ".", "_", -1))
+		domainRegexp, err := regexp.Compile(domainRegexpRaw)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Failed to create HttpStartStop filter rule %s: %s", domainRegexpRaw, err)
+			panic(err)
+		}
+		domainsRegexp = append(domainsRegexp, domainRegexp)
+	}
 
 	c := cfclient.Config{
 		ApiAddress:        *apiEndpoint,
@@ -82,7 +95,7 @@ func main() {
 	cachingClient.PerformPoollingCaching(*ccTickerTime)
 	cachingClient.PerformBoshPoolingCaching(*boshTickerTime)
 
-	httpStartStopProcessor := processors.NewHttpStartStopProcessor(cachingClient)
+	httpStartStopProcessor := processors.NewHttpStartStopProcessor(cachingClient, domainsRegexp)
 	valueMetricProcessor := processors.NewValueMetricProcessor()
 	counterProcessor := processors.NewCounterProcessor()
 	containerMetricProcessor := processors.NewContainerMetricProcessor(cachingClient)
@@ -97,7 +110,7 @@ func main() {
 
 	go func() {
 		for err := range errorChan {
-			fmt.Fprintf(os.Stderr, "%v\n", err.Error())
+			fmt.Fprintf(os.Stderr, "Error from firehose: %v\n", err.Error())
 		}
 	}()
 
@@ -120,7 +133,9 @@ func main() {
 		}
 
 		if proc_err != nil {
-			fmt.Fprintf(os.Stderr, "%v\n", proc_err.Error())
+			fmt.Fprintf(os.Stderr, "Error: %v\n", proc_err.Error())
+			// Reset proc_err in case if next event will pass through 'default' section, e.g. LogMessage
+			proc_err = nil
 			continue
 		}
 
