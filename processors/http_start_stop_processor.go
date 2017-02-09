@@ -125,7 +125,9 @@ func (p *HttpStartStopProcessor) ProcessHttpStartStopResponseTimeForApp(event *e
 	appName := appInfo.Name
 	appName = strings.Replace(appName, ".", "_", -1)
 	spaceName := appInfo.SpaceName
+	spaceName = strings.Replace(spaceName, ".", "_", -1)
 	orgName := appInfo.OrgName
+	orgName = strings.Replace(orgName, ".", "_", -1)
 	// TODO: apparently GetInstanceIndex always is nil, so we need to find a way to convert
 	// GetInstanceId (UUID) to Index (int)
 	instanceIndex := strconv.Itoa(int(event.GetInstanceIndex()))
@@ -152,7 +154,9 @@ func (p *HttpStartStopProcessor) ProcessHttpStartStopStatusCodeCountForApp(event
 	appName := appInfo.Name
 	appName = strings.Replace(appName, ".", "_", -1)
 	spaceName := appInfo.SpaceName
+	spaceName = strings.Replace(spaceName, ".", "_", -1)
 	orgName := appInfo.OrgName
+	orgName = strings.Replace(orgName, ".", "_", -1)
 	// TODO: apparently GetInstanceIndex always is nil, so we need to find a way to convert
 	// GetInstanceId (UUID) to Index (int)
 	instanceIndex := strconv.Itoa(int(event.GetInstanceIndex()))
@@ -195,7 +199,9 @@ func (p *HttpStartStopProcessor) ProcessHttpStartStopHttpErrorCountForApp(event 
 	appName := appInfo.Name
 	appName = strings.Replace(appName, ".", "_", -1)
 	spaceName := appInfo.SpaceName
+	spaceName = strings.Replace(spaceName, ".", "_", -1)
 	orgName := appInfo.OrgName
+	orgName = strings.Replace(orgName, ".", "_", -1)
 	// TODO: apparently GetInstanceIndex always is nil, so we need to find a way to convert
 	// GetInstanceId (UUID) to Index (int)
 	instanceIndex := strconv.Itoa(int(event.GetInstanceIndex()))
@@ -221,7 +227,9 @@ func (p *HttpStartStopProcessor) ProcessHttpStartStopHttpRequestCountForApp(even
 	appName := appInfo.Name
 	appName = strings.Replace(appName, ".", "_", -1)
 	spaceName := appInfo.SpaceName
+	spaceName = strings.Replace(spaceName, ".", "_", -1)
 	orgName := appInfo.OrgName
+	orgName = strings.Replace(orgName, ".", "_", -1)
 	// TODO: apparently GetInstanceIndex always is nil, so we need to find a way to convert
 	// GetInstanceId (UUID) to Index (int)
 	instanceIndex := strconv.Itoa(int(event.GetInstanceIndex()))

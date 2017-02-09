@@ -35,7 +35,9 @@ func (p *ContainerMetricProcessor) ProcessContainerMetricCPU(e *events.Container
 	appName := appInfo.Name
 	appName = strings.Replace(appName, ".", "_", -1)
 	spaceName := appInfo.SpaceName
+	spaceName = strings.Replace(spaceName, ".", "_", -1)
 	orgName := appInfo.OrgName
+	orgName = strings.Replace(orgName, ".", "_", -1)
 	instanceIndex := strconv.Itoa(int(e.GetInstanceIndex()))
 
 	stat := "apps." + orgName + "." + spaceName + "." + appName + "." + instanceIndex + ".cpu"
@@ -50,7 +52,9 @@ func (p *ContainerMetricProcessor) ProcessContainerMetricMemory(e *events.Contai
 	appName := appInfo.Name
 	appName = strings.Replace(appName, ".", "_", -1)
 	spaceName := appInfo.SpaceName
+	spaceName = strings.Replace(spaceName, ".", "_", -1)
 	orgName := appInfo.OrgName
+	orgName = strings.Replace(orgName, ".", "_", -1)
 	instanceIndex := strconv.Itoa(int(e.GetInstanceIndex()))
 
 	stat := "apps." + orgName + "." + spaceName + "." + appName + "." + instanceIndex + ".memoryBytes"
@@ -65,7 +69,9 @@ func (p *ContainerMetricProcessor) ProcessContainerMetricMemoryQuota(e *events.C
 	appName := appInfo.Name
 	appName = strings.Replace(appName, ".", "_", -1)
 	spaceName := appInfo.SpaceName
+	spaceName = strings.Replace(spaceName, ".", "_", -1)
 	orgName := appInfo.OrgName
+	orgName = strings.Replace(orgName, ".", "_", -1)
 	instanceIndex := strconv.Itoa(int(e.GetInstanceIndex()))
 
 	stat := "apps." + orgName + "." + spaceName + "." + appName + "." + instanceIndex + ".memoryBytesQuota"
@@ -80,7 +86,9 @@ func (p *ContainerMetricProcessor) ProcessContainerMetricDisk(e *events.Containe
 	appName := appInfo.Name
 	appName = strings.Replace(appName, ".", "_", -1)
 	spaceName := appInfo.SpaceName
+	spaceName = strings.Replace(spaceName, ".", "_", -1)
 	orgName := appInfo.OrgName
+	orgName = strings.Replace(orgName, ".", "_", -1)
 	instanceIndex := strconv.Itoa(int(e.GetInstanceIndex()))
 
 	stat := "apps." + orgName + "." + spaceName + "." + appName + "." + instanceIndex + ".diskBytes"
@@ -95,7 +103,9 @@ func (p *ContainerMetricProcessor) ProcessContainerMetricDiskQuota(e *events.Con
 	appName := appInfo.Name
 	appName = strings.Replace(appName, ".", "_", -1)
 	spaceName := appInfo.SpaceName
+	spaceName = strings.Replace(spaceName, ".", "_", -1)
 	orgName := appInfo.OrgName
+	orgName = strings.Replace(orgName, ".", "_", -1)
 	instanceIndex := strconv.Itoa(int(e.GetInstanceIndex()))
 
 	stat := "apps." + orgName + "." + spaceName + "." + appName + "." + instanceIndex + ".diskBytesQuota"
