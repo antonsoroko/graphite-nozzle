@@ -54,7 +54,7 @@ func main() {
 
 	var domainsRegexp []*regexp.Regexp
 	for _, appsDomain := range *appsDomains {
-		domainRegexpRaw := fmt.Sprintf(`^.*%s$`, strings.Replace(appsDomain, ".", "_", -1))
+		domainRegexpRaw := fmt.Sprintf(`^.*%s(?:_\d{2,5})?$`, strings.Replace(appsDomain, ".", "_", -1))
 		domainRegexp, err := regexp.Compile(domainRegexpRaw)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Failed to create HttpStartStop filter rule %s: %s", domainRegexpRaw, err)
