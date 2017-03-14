@@ -7,8 +7,9 @@ import (
 	"crypto/tls"
 	"fmt"
 	"os"
-	"strings"
 	"regexp"
+	"strings"
+	"time"
 
 	"github.com/cloudfoundry-community/go-cfclient"
 	"github.com/cloudfoundry-community/gogobosh"
@@ -110,7 +111,7 @@ func main() {
 
 	go func() {
 		for err := range errorChan {
-			fmt.Fprintf(os.Stderr, "Error from firehose: %v\n", err.Error())
+			fmt.Fprintf(os.Stderr, "%s: Error from firehose: %v\n", time.Now().Format("2006-01-02 15:04:05"), err.Error())
 		}
 	}()
 
@@ -133,7 +134,7 @@ func main() {
 		}
 
 		if proc_err != nil {
-			fmt.Fprintf(os.Stderr, "Error: %v\n", proc_err.Error())
+			fmt.Fprintf(os.Stderr, "%s: Error: %v\n", time.Now().Format("2006-01-02 15:04:05"), proc_err.Error())
 			// Reset proc_err in case if next event will pass through 'default' section, e.g. LogMessage
 			proc_err = nil
 			continue
