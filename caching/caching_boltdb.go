@@ -7,6 +7,7 @@ import (
 	cfClient "github.com/cloudfoundry-community/go-cfclient"
 	"github.com/cloudfoundry-community/gogobosh"
 	json "github.com/mailru/easyjson"
+	"github.com/pivotal-cf/graphite-nozzle/logger"
 	"time"
 )
 
@@ -33,7 +34,6 @@ func (c *CachingBolt) CreateBucket() {
 			return fmt.Errorf("Create bucket: %s", err)
 		}
 		return nil
-
 	})
 
 }
@@ -77,12 +77,12 @@ func (c *CachingBolt) fillDatabase(listJobs []Job) {
 }
 
 func (c *CachingBolt) GetAllJobs() []Job {
-	fmt.Println("Retrieving Jobs for Cache...")
+	logger.Info.Println("Retrieving Jobs for Cache...")
 	var jobs []Job
 
 	defer func() {
 		if r := recover(); r != nil {
-			fmt.Println("Recovered in caching.GetAllJob()", r)
+			logger.Error.Println("Recovered in caching.GetAllJob()", r)
 		}
 	}()
 
@@ -97,13 +97,13 @@ func (c *CachingBolt) GetAllJobs() []Job {
 			return jobs
 		}
 		for _, vm := range vms {
-			fmt.Printf("Job [%s.%d] Found...\n", vm.Name(), vm.Index)
+			logger.Info.Printf("Job [%s.%d] Found...", vm.Name(), vm.Index)
 			jobs = append(jobs, Job{vm.Name(), vm.ID, vm.Index})
 		}
 	}
 
 	c.fillDatabase(jobs)
-	fmt.Sprintf("Found [%d] Jobs!", len(jobs))
+	logger.Info.Printf("Found [%d] Jobs!", len(jobs))
 
 	return jobs
 }
@@ -126,7 +126,7 @@ func (c *CachingBolt) GetJobInfo(jobID string) Job {
 	var job Job
 	c.Appdb.View(func(tx *bolt.Tx) error {
 		if c.debug {
-			//fmt.Printf("Looking for Job %s in Cache!\n", jobID)
+			//logger.Debug.Printf("Looking for Job %s in Cache!\n", jobID)
 		}
 		b := tx.Bucket([]byte("JobBucket"))
 		d = b.Get([]byte(jobID))
