@@ -6,16 +6,15 @@ package main
 import (
 	"crypto/tls"
 	"fmt"
-	"os"
 	"regexp"
 	"strings"
-	"time"
 
 	"github.com/cloudfoundry-community/go-cfclient"
 	"github.com/cloudfoundry-community/gogobosh"
 	"github.com/cloudfoundry/noaa/consumer"
 	"github.com/cloudfoundry/sonde-go/events"
 	"github.com/pivotal-cf/graphite-nozzle/caching"
+	"github.com/pivotal-cf/graphite-nozzle/logger"
 	"github.com/pivotal-cf/graphite-nozzle/metrics"
 	"github.com/pivotal-cf/graphite-nozzle/processors"
 	"github.com/quipo/statsd"
@@ -58,7 +57,7 @@ func main() {
 		domainRegexpRaw := fmt.Sprintf(`^.*%s(?:_\d{2,5})?$`, strings.Replace(appsDomain, ".", "_", -1))
 		domainRegexp, err := regexp.Compile(domainRegexpRaw)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "Failed to create HttpStartStop filter rule %s: %s", domainRegexpRaw, err)
+			logger.Error.Printf("Failed to create HttpStartStop filter rule %s: %s", domainRegexpRaw, err)
 			panic(err)
 		}
 		domainsRegexp = append(domainsRegexp, domainRegexp)
@@ -86,12 +85,12 @@ func main() {
 	cachingClient := caching.NewCachingBolt(cfClient, *boltDatabasePath, gogoboshClient, *debug)
 	cachingClient.CreateBucket()
 	//Let's Update the database the first time
-	fmt.Println("Start filling app/space/org cache.")
+	logger.Info.Println("Start filling app/space/org cache.")
 	apps := cachingClient.GetAllApp()
-	fmt.Printf("Done filling cache! Found [%d] Apps\n", len(apps))
-	fmt.Println("Start filling Jobs cache.")
+	logger.Info.Printf("Done filling cache! Found [%d] Apps", len(apps))
+	logger.Info.Println("Start filling Jobs cache.")
 	jobs := cachingClient.GetAllJobs()
-	fmt.Printf("Done filling cache! Found [%d] Jobs\n", len(jobs))
+	logger.Info.Printf("Done filling cache! Found [%d] Jobs", len(jobs))
 	//Let's start the polling goRoutine
 	cachingClient.PerformPoollingCaching(*ccTickerTime)
 	cachingClient.PerformBoshPoolingCaching(*boshTickerTime)
@@ -111,7 +110,7 @@ func main() {
 
 	go func() {
 		for err := range errorChan {
-			fmt.Fprintf(os.Stderr, "%s: Error from firehose: %v\n", time.Now().Format("2006-01-02 15:04:05"), err.Error())
+			logger.Error.Printf("Got error from firehose: %v", err.Error())
 		}
 	}()
 
@@ -134,7 +133,7 @@ func main() {
 		}
 
 		if proc_err != nil {
-			fmt.Fprintf(os.Stderr, "%s: Error: %v\n", time.Now().Format("2006-01-02 15:04:05"), proc_err.Error())
+			logger.Error.Printf("Processing Error: %v", proc_err.Error())
 			// Reset proc_err in case if next event will pass through 'default' section, e.g. LogMessage
 			proc_err = nil
 			continue
@@ -151,7 +150,7 @@ func main() {
 			}
 			metric.Send(sender, prefix)
 			if *debug {
-				fmt.Println(prefix, metric)
+				logger.Debug.Println(prefix, metric)
 			}
 		}
 
