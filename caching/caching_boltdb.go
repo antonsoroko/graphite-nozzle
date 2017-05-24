@@ -77,7 +77,9 @@ func (c *CachingBolt) fillDatabase(listJobs []Job) {
 }
 
 func (c *CachingBolt) GetAllJobs() []Job {
-	logger.Info.Println("Retrieving Jobs for Cache...")
+	if c.debug {
+		logger.Debug.Println("Retrieving Jobs for Cache...")
+	}
 	var jobs []Job
 
 	defer func() {
@@ -94,16 +96,20 @@ func (c *CachingBolt) GetAllJobs() []Job {
 	for _, deployment := range deployments {
 		vms, err := c.GogoboshClient.GetDeploymentVMsShort(deployment.Name)
 		if err != nil {
-			return jobs
+			continue
 		}
 		for _, vm := range vms {
-			logger.Info.Printf("Job [%s.%d] Found...", vm.Name(), vm.Index)
+			if c.debug {
+				logger.Debug.Printf("Job [%s.%d] Found...", vm.Name(), vm.Index)
+			}
 			jobs = append(jobs, Job{vm.Name(), vm.ID, vm.Index})
 		}
 	}
 
 	c.fillDatabase(jobs)
-	logger.Info.Printf("Found [%d] Jobs!", len(jobs))
+	if c.debug {
+		logger.Debug.Printf("Found [%d] Jobs!", len(jobs))
+	}
 
 	return jobs
 }
@@ -121,7 +127,6 @@ func (c *CachingBolt) GetAllJobs() []Job {
 //}
 
 func (c *CachingBolt) GetJobInfo(jobID string) Job {
-
 	var d []byte
 	var job Job
 	c.Appdb.View(func(tx *bolt.Tx) error {
