@@ -7,9 +7,9 @@ import (
 	"github.com/cloudfoundry-community/firehose-to-syslog/caching"
 	"github.com/cloudfoundry/sonde-go/events"
 	"github.com/pivotal-cf/graphite-nozzle/metrics"
+	"regexp"
 	"strconv"
 	"strings"
-	"regexp"
 )
 
 type HttpStartStopProcessor struct {
@@ -59,16 +59,16 @@ func (p *HttpStartStopProcessor) Process(e *events.Envelope) (processedMetrics [
 		processedMetrics = make([]metrics.Metric, 4)
 	}
 
-	processedMetrics[0] = metrics.Metric(p.ProcessHttpStartStopResponseTime(httpStartStopEvent))
-	processedMetrics[1] = metrics.Metric(p.ProcessHttpStartStopStatusCodeCount(httpStartStopEvent))
-	processedMetrics[2] = metrics.Metric(p.ProcessHttpStartStopHttpErrorCount(httpStartStopEvent))
-	processedMetrics[3] = metrics.Metric(p.ProcessHttpStartStopHttpRequestCount(httpStartStopEvent))
+	processedMetrics[0] = p.ProcessHttpStartStopResponseTime(httpStartStopEvent)
+	processedMetrics[1] = p.ProcessHttpStartStopStatusCodeCount(httpStartStopEvent)
+	processedMetrics[2] = p.ProcessHttpStartStopHttpErrorCount(httpStartStopEvent)
+	processedMetrics[3] = p.ProcessHttpStartStopHttpRequestCount(httpStartStopEvent)
 
 	if httpStartStopEvent.GetApplicationId() != nil {
-		processedMetrics[4] = metrics.Metric(p.ProcessHttpStartStopResponseTimeForApp(httpStartStopEvent))
-		processedMetrics[5] = metrics.Metric(p.ProcessHttpStartStopStatusCodeCountForApp(httpStartStopEvent))
-		processedMetrics[6] = metrics.Metric(p.ProcessHttpStartStopHttpErrorCountForApp(httpStartStopEvent))
-		processedMetrics[7] = metrics.Metric(p.ProcessHttpStartStopHttpRequestCountForApp(httpStartStopEvent))
+		processedMetrics[4] = p.ProcessHttpStartStopResponseTimeForApp(httpStartStopEvent)
+		processedMetrics[5] = p.ProcessHttpStartStopStatusCodeCountForApp(httpStartStopEvent)
+		processedMetrics[6] = p.ProcessHttpStartStopHttpErrorCountForApp(httpStartStopEvent)
+		processedMetrics[7] = p.ProcessHttpStartStopHttpRequestCountForApp(httpStartStopEvent)
 	}
 
 	return
