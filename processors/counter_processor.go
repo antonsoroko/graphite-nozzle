@@ -14,13 +14,14 @@ func NewCounterProcessor() *CounterProcessor {
 func (p *CounterProcessor) Process(e *events.Envelope) ([]metrics.Metric, error) {
 	processedMetrics := make([]metrics.Metric, 1)
 	counterEvent := e.GetCounterEvent()
+	origin := e.GetOrigin()
 
-	processedMetrics[0] = metrics.Metric(p.ProcessCounter(counterEvent))
+	processedMetrics[0] = p.ProcessCounter(counterEvent, origin)
 
 	return processedMetrics, nil
 }
 
-func (p *CounterProcessor) ProcessCounter(event *events.CounterEvent) *metrics.CounterMetric {
+func (p *CounterProcessor) ProcessCounter(event *events.CounterEvent, origin string) *metrics.CounterMetric {
 	counterMetricName := event.GetName()
 	switch counterMetricName {
 	case "responses":
@@ -28,7 +29,7 @@ func (p *CounterProcessor) ProcessCounter(event *events.CounterEvent) *metrics.C
 	case "registry_message.":
 		counterMetricName += "unknown"
 	}
-	stat := "ops." + counterMetricName
+	stat := "ops." + origin + "." + counterMetricName
 	metric := metrics.NewCounterMetric(stat, int64(event.GetDelta()))
 
 	return metric
