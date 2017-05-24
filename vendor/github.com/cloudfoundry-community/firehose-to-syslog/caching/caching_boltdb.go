@@ -96,7 +96,7 @@ func (c *CachingBolt) GetAppByGuid(appGuid string) []App {
 
 func (c *CachingBolt) GetAllApp() []App {
 
-	logging.LogStd("Retrieving Apps for Cache...", true)
+	logging.LogStd("Retrieving Apps for Cache...", false)
 	var apps []App
 
 	defer func() {
@@ -111,12 +111,12 @@ func (c *CachingBolt) GetAllApp() []App {
 	}
 
 	for _, app := range cfApps {
-		logging.LogStd(fmt.Sprintf("App [%s] Found...", app.Name), true)
+		logging.LogStd(fmt.Sprintf("App [%s] Found...", app.Name), false)
 		apps = append(apps, App{app.Name, app.Guid, app.SpaceData.Entity.Name, app.SpaceData.Entity.Guid, app.SpaceData.Entity.OrgData.Entity.Name, app.SpaceData.Entity.OrgData.Entity.Guid})
 	}
 
 	c.fillDatabase(apps)
-	logging.LogStd(fmt.Sprintf("Found [%d] Apps!", len(apps)), true)
+	logging.LogStd(fmt.Sprintf("Found [%d] Apps!", len(apps)), false)
 
 	return apps
 }
