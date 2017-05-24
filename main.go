@@ -114,6 +114,14 @@ func main() {
 		}
 	}()
 
+	var prefix string
+	var internalPrefix string
+	var jobName string
+	var jobIndexStr string
+	var jobIndex int
+	var jobOrigin string
+	var deploymentName string
+
 	for msg := range msgChan {
 		eventType := msg.GetEventType()
 
@@ -130,23 +138,41 @@ func main() {
 			processedMetrics, proc_err = valueMetricProcessor.Process(msg)
 		default:
 			// do nothing
+			continue
 		}
 
 		if proc_err != nil {
 			logger.Error.Printf("Processing Error: %v", proc_err.Error())
-			// Reset proc_err in case if next event will pass through 'default' section, e.g. LogMessage
-			proc_err = nil
 			continue
 		}
 
+		deploymentName = msg.GetDeployment()
+		jobName = msg.GetJob()
+		jobIndexStr = msg.GetIndex()
+		jobIndex = cachingClient.GetJobInfoCache(jobIndexStr).Index
+		if *prefixJob {
+			// skip metric with empty name
+			if jobName == "" {
+				logger.Error.Println("Got a job without name.")
+				continue
+			// skip metric with empty index
+			} else if jobIndexStr == "" {
+				logger.Error.Printf("Job %v has came with bad index.\n", jobName)
+				continue
+			}
+			// TODO: firehose and bosh use different names for deployment eg cf-rabbit vs p-rabbitmq-8ec01d6a62ee6bf4452b
+			// for now we can live with this dirty hack
+			jobOrigin = msg.GetOrigin()
+			if jobOrigin == "bosh-hm-forwarder" && deploymentName != "bosh-hm-forwarder" {
+				internalPrefix = "bosh."
+			} else {
+				internalPrefix = "cf."
+			}
+		}
 		for _, metric := range processedMetrics {
-			var prefix string
-			var index int
 			if *prefixJob {
-				index = cachingClient.GetJobInfoCache(msg.GetIndex()).Index
-				jobName := msg.GetJob()
 				jobName = strings.Replace(jobName, ".", "_", -1)
-				prefix = jobName + "." + fmt.Sprintf("%d", index)
+				prefix = internalPrefix + deploymentName + "." + jobName + "." + fmt.Sprintf("%d", jobIndex)
 			}
 			metric.Send(sender, prefix)
 			if *debug {

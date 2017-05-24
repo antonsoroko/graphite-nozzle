@@ -8,6 +8,7 @@ import (
 	"github.com/cloudfoundry-community/gogobosh"
 	json "github.com/mailru/easyjson"
 	"github.com/pivotal-cf/graphite-nozzle/logger"
+	"strconv"
 	"time"
 )
 
@@ -145,9 +146,19 @@ func (c *CachingBolt) GetJobInfo(jobID string) Job {
 }
 
 func (c *CachingBolt) GetJobInfoCache(jobID string) Job {
-	if job := c.GetJobInfo(jobID); job.Name != "" {
+	// strange case
+	if jobID == "" {
+		logger.Error.Printf("Got empty jobID parameter.\n")
+		return Job{}
+	// normal case
+	} else if job := c.GetJobInfo(jobID); job.Name != "" {
 		return job
+	// bosh hm forwarder case
+	} else if index, err := strconv.Atoi(jobID); err == nil {
+		return Job{Index: index}
+	// absent in cache
 	} else {
+		logger.Warning.Printf("Could not find job: %s. Will update job's cache.\n", jobID)
 		c.GetAllJobs()
 	}
 	return c.GetJobInfo(jobID)
