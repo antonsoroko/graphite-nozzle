@@ -3,6 +3,7 @@ package processors
 import (
 	"github.com/cloudfoundry/sonde-go/events"
 	"github.com/pivotal-cf/graphite-nozzle/metrics"
+	"strings"
 )
 
 type ValueMetricProcessor struct{}
@@ -26,6 +27,14 @@ func (p *ValueMetricProcessor) ProcessValueMetric(event *events.ValueMetric, ori
 	if origin == "gorouter" && valueMetricName == "latency" {
 		valueMetricName += ".all"
 	}
+	// rabbit root vhost
+	if origin == "p-rabbitmq" {
+		valueMetricName = strings.Replace(valueMetricName, "///", "/root/", -1)
+	}
+	// rabbit and redis use / as delimeter
+	valueMetricName = strings.Replace(valueMetricName, "/", ".", -1)
+	valueMetricName = strings.Trim(valueMetricName, ".")
+
 	stat := statPrefix + valueMetricName
 	metric := metrics.NewFGaugeMetric(stat, event.GetValue())
 
