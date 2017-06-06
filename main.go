@@ -146,16 +146,17 @@ func main() {
 			continue
 		}
 
-		deploymentName = msg.GetDeployment()
-		jobName = msg.GetJob()
-		jobIndexStr = msg.GetIndex()
-		jobIndex = cachingClient.GetJobInfoCache(jobIndexStr).Index
 		if *prefixJob {
+			deploymentName = msg.GetDeployment()
+			jobName = msg.GetJob()
+			jobIndexStr = msg.GetIndex()
+			jobIndex = cachingClient.GetJobInfoCache(jobIndexStr).Index
+
 			// skip metric with empty name
 			if jobName == "" {
 				logger.Error.Println("Got a job without name.")
 				continue
-			// skip metric with empty index
+				// skip metric with empty index
 			} else if jobIndexStr == "" {
 				logger.Error.Printf("Job %v has came with bad index.\n", jobName)
 				continue
@@ -168,14 +169,14 @@ func main() {
 			} else {
 				internalPrefix = "cf."
 			}
+
+			jobName = strings.Replace(jobName, ".", "_", -1)
+			prefix = internalPrefix + deploymentName + "." + jobName + "." + fmt.Sprintf("%d", jobIndex)
 		}
 		for _, metric := range processedMetrics {
-			if *prefixJob {
-				jobName = strings.Replace(jobName, ".", "_", -1)
-				prefix = internalPrefix + deploymentName + "." + jobName + "." + fmt.Sprintf("%d", jobIndex)
-			}
-			metric.Send(sender, prefix)
-			if *debug {
+			if !*debug {
+				metric.Send(sender, prefix)
+			} else {
 				logger.Debug.Println(prefix, metric)
 			}
 		}
