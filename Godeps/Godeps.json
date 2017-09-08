@@ -70,18 +70,18 @@
 		},
 		{
 			"ImportPath": "github.com/gogo/protobuf/gogoproto",
-			"Comment": "v0.2-55-ge33835a",
-			"Rev": "e33835a643a970c11ac74f6333f5f6866387a101"
+			"Comment": "v0.4-56-g2adc21f",
+			"Rev": "2adc21fd136931e0388e278825291678e1d98309"
 		},
 		{
 			"ImportPath": "github.com/gogo/protobuf/proto",
-			"Comment": "v0.2-55-ge33835a",
-			"Rev": "e33835a643a970c11ac74f6333f5f6866387a101"
+			"Comment": "v0.4-56-g2adc21f",
+			"Rev": "2adc21fd136931e0388e278825291678e1d98309"
 		},
 		{
 			"ImportPath": "github.com/gogo/protobuf/protoc-gen-gogo/descriptor",
-			"Comment": "v0.2-55-ge33835a",
-			"Rev": "e33835a643a970c11ac74f6333f5f6866387a101"
+			"Comment": "v0.4-56-g2adc21f",
+			"Rev": "2adc21fd136931e0388e278825291678e1d98309"
 		},
 		{
 			"ImportPath": "github.com/gorilla/websocket",
