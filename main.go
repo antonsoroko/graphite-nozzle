@@ -170,6 +170,7 @@ func main() {
 				internalPrefix = "cf."
 			}
 
+			deploymentName = strings.Replace(deploymentName, ".", "_", -1)
 			jobName = strings.Replace(jobName, ".", "_", -1)
 			prefix = internalPrefix + deploymentName + "." + jobName + "." + fmt.Sprintf("%d", jobIndex)
 		}
