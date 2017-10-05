@@ -128,8 +128,6 @@ func (p *HttpStartStopProcessor) ProcessHttpStartStopResponseTimeForApp(event *e
 	spaceName = strings.Replace(spaceName, ".", "_", -1)
 	orgName := appInfo.OrgName
 	orgName = strings.Replace(orgName, ".", "_", -1)
-	// TODO: apparently GetInstanceIndex always is nil, so we need to find a way to convert
-	// GetInstanceId (UUID) to Index (int)
 	instanceIndex := strconv.Itoa(int(event.GetInstanceIndex()))
 
 	stat := "apps." + orgName + "." + spaceName + "." + appName + "." + instanceIndex + ".responsetimes"
