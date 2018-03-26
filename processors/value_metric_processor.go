@@ -30,6 +30,8 @@ func (p *ValueMetricProcessor) ProcessValueMetric(event *events.ValueMetric, ori
 	// rabbit root vhost
 	if origin == "p-rabbitmq" {
 		valueMetricName = strings.Replace(valueMetricName, "///", "/root/", -1)
+		valueMetricName = strings.Replace(valueMetricName, ".", "_", -1)
+		// e.g. exchange name /p-rabbitmq/rabbitmq/queues/944...b78/spring.cloud.broker.5.update.replies/consumers
 	}
 	// rabbit and redis use / as delimeter
 	valueMetricName = strings.Replace(valueMetricName, "/", ".", -1)
