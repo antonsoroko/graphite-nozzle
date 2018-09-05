@@ -155,8 +155,6 @@ func (p *HttpStartStopProcessor) ProcessHttpStartStopStatusCodeCountForApp(event
 	spaceName = strings.Replace(spaceName, ".", "_", -1)
 	orgName := appInfo.OrgName
 	orgName = strings.Replace(orgName, ".", "_", -1)
-	// TODO: apparently GetInstanceIndex always is nil, so we need to find a way to convert
-	// GetInstanceId (UUID) to Index (int)
 	instanceIndex := strconv.Itoa(int(event.GetInstanceIndex()))
 
 	stat := "apps." + orgName + "." + spaceName + "." + appName + "." + instanceIndex + ".statuscodes." + strconv.Itoa(int(event.GetStatusCode()))
@@ -200,8 +198,6 @@ func (p *HttpStartStopProcessor) ProcessHttpStartStopHttpErrorCountForApp(event 
 	spaceName = strings.Replace(spaceName, ".", "_", -1)
 	orgName := appInfo.OrgName
 	orgName = strings.Replace(orgName, ".", "_", -1)
-	// TODO: apparently GetInstanceIndex always is nil, so we need to find a way to convert
-	// GetInstanceId (UUID) to Index (int)
 	instanceIndex := strconv.Itoa(int(event.GetInstanceIndex()))
 
 	stat := "apps." + orgName + "." + spaceName + "." + appName + "." + instanceIndex + ".errors"
@@ -228,8 +224,6 @@ func (p *HttpStartStopProcessor) ProcessHttpStartStopHttpRequestCountForApp(even
 	spaceName = strings.Replace(spaceName, ".", "_", -1)
 	orgName := appInfo.OrgName
 	orgName = strings.Replace(orgName, ".", "_", -1)
-	// TODO: apparently GetInstanceIndex always is nil, so we need to find a way to convert
-	// GetInstanceId (UUID) to Index (int)
 	instanceIndex := strconv.Itoa(int(event.GetInstanceIndex()))
 
 	stat := "apps." + orgName + "." + spaceName + "." + appName + "." + instanceIndex + ".requests"
